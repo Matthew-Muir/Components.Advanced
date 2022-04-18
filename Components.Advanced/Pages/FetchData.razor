@@ -11,27 +11,49 @@
 }
 else
 {
-    <Grid Items="forecasts">
+    <Grid Items="forecasts" TItem="WeatherForecast">
         <Header>
-            <th>Date</th>
-            <th>Temp. (C)</th>
-            <th>Temp. (F)</th>
-            <th>Summary</th>
+        <th>Date</th>
+        <th>Temp. (C)</th>
+        <th>Temp. (F)</th>
+        <th>Summary</th>
         </Header>
         <Row Context="forecast">
             <!--be default called context-->
-            <td>@forecast.Date</td>
+        <td>@forecast.Date</td>
             <td>@forecast.TemperatureC</td>
             <td>@forecast.TemperatureF</td>
             <td>@forecast.Summary</td>
         </Row>
         <Footer>
-            <td colspan="4">Spring is in the air!</td>
+        <td colspan="4">Spring is in the air!</td>
         </Footer>
     </Grid>
+
+    <ListView Items="forecasts">
+        <ItemTemplate>
+            @forecastTemplate(context)
+        </ItemTemplate>
+    </ListView>
+    <ListView2 Items="forecasts">
+        <ListTemplate Context="innerTemplate">
+            <ol>
+                @innerTemplate
+            </ol>
+        </ListTemplate>
+        <ItemTemplate Context="forecast">
+            <li>@forecast.Summary</li>
+        </ItemTemplate>
+    </ListView2>
+    <!--LEFT OFF HERE PAGE 164-->
+
 }
 
 @code {
+    private RenderFragment<WeatherForecast> forecastTemplate = (forecast) =>
+    @<span>@forecast.Summary</span>
+    ;
+
     private WeatherForecast[] forecasts;
 
     protected override async Task OnInitializedAsync()
@@ -42,7 +64,7 @@ else
     public class WeatherForecast
     {
         public DateTime Date { get; set; }
-        public int TemperatureC { get; set; } 
+        public int TemperatureC { get; set; }
         public string Summary { get; set; }
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
     }
